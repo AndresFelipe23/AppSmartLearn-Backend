@@ -14,7 +14,7 @@ const ExerciseSchema = new Schema({
         ref: "Course",
         autopopulate: true
     }],
-   
+    
     task_type: String,
     task_title: String,
     task_description: String,
