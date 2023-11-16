@@ -9,6 +9,11 @@ const ExerciseSchema = new Schema({
         ref: "Area",
         autopopulate: true
     }],
+    Course: [{
+        type: Schema.Types.ObjectId,
+        ref: "Course",
+        autopopulate: true   
+    }],
     topic: [{
         type: Schema.Types.ObjectId,
         ref: "Course",
@@ -20,7 +25,15 @@ const ExerciseSchema = new Schema({
     task_description: String,
     deliveryDateInicial: Date,
     deliveryDateFinal: Date,
-    task_status: String,
+    task_status:{
+        
+        type: Schema.Types.ObjectId,
+        ref: 'EstadoExercise',
+        autopopulate: true,
+        default: new moongose.Types.ObjectId('653f0a6c777e847360caeb59')
+    
+
+    },
     archivoAWS: String,
     archivo: Array,
     enviados: [

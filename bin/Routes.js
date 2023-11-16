@@ -674,6 +674,16 @@ app.post("/imagenNoticia", async function (req, res) {
   // const url = await getFileURLimagennoticia(archivo.nombre)
   res.send({ status: 200, nU: url });
 });
+
+app.post("/imagenNoticiaNueva", async function(req, res) {
+  const url = await uploadimagenes(req.files.file)
+
+  // const url = await getFileURLimagennoticia(archivo.nombre)
+  res.send({ status: 200, nU: url });
+
+})
+
+
 const clientela = new S3Client({
   region: "us-east-2",
   credentials: {

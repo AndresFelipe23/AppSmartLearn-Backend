@@ -181,6 +181,22 @@ class Controller {
       });
   }
 
+  viewNotice(id, res) {
+    Notice.findById(id)
+        .then(notices => {
+            if (!notices) {
+                res.status(404).send("Noticia no encontrada");
+            } else {
+                res.send(notices);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send("Error al obtener la noticia");
+        });
+}
+
+
   // Aceptar o Rechazar una noticia y almacenar observaciones en caso de ser rechazada
   async acceptOrRejectNotice(id, status, observacion, res) {
     try {

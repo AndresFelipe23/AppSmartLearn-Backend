@@ -58,29 +58,47 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
     const exercises = await Exercise.find();
 
     for (const ejercicio of exercises) {
-      const { deliveryDateFinal, Course, task_status } = ejercicio;
+      const { deliveryDateFinal, Course, task_status, enviados } = ejercicio;
+
+      const MONDA = new Set(); // Declara un conjunto
+
+// Obtén el valor de enviados[0]?.trabajos[0]?.people_id
+      const valor = enviados[0]?.trabajos[0]?.people_id;
+
+// Agrega el valor al conjunto MONDA
+      MONDA.add(valor);
 
       console.log("task_status", task_status);
       const currentDate = new Date();
-      const thirtyDaysLater = new Date();
-      thirtyDaysLater.setDate(currentDate.getDate() + 30);
+      const gaver = new Date();
+      gaver.setDate(currentDate.getDate() + 30);
 
       if (
-        deliveryDateFinal <= thirtyDaysLater &&
-        task_status == "653f0a6c777e847360caeb59"
+        deliveryDateFinal <= gaver &&
+        task_status == "653f0a51777e847360caeb57"
       ) {
+        console.log("Aqui deberia mandar");
+
         const estudiantes = await People.find();
-        const estudiantesSeleccionados = [];
+        const estudiantesFiltrados = [];
+
+
+        // console.log("estudiantes", estudiantes);
 
         for (const estudiante of estudiantes) {
           estudiante.course.forEach((curso) => {
             if (curso && curso._id && Course) {
               if (curso._id.toString() === Course.toString()) {
-                estudiantesSeleccionados.push(estudiante);
+                estudiantesFiltrados.push(estudiante);
               }
             }
           });
         }
+        console.log("estudiantesFiltrados", estudiantesFiltrados);
+
+        const estudiantesSeleccionados = estudiantesFiltrados.filter(estudiante => !MONDA.has(estudiante._id));
+        console.log("estudiantesSeleccionados", estudiantesSeleccionados);
+
 
         const paranotificar = estudiantesSeleccionados.map((estudiante) => ({
           nameAcudiente: estudiante.nameAcudiente,
