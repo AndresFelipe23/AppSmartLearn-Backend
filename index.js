@@ -60,13 +60,9 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
     for (const ejercicio of exercises) {
       const { deliveryDateFinal, Course, task_status, enviados } = ejercicio;
 
-      const MONDA = new Set(); // Declara un conjunto
-
-// Obtén el valor de enviados[0]?.trabajos[0]?.people_id
-      const valor = enviados[0]?.trabajos[0]?.people_id;
-
-// Agrega el valor al conjunto MONDA
-      MONDA.add(valor);
+      const MONDA = new Set(); 
+      const chachu = enviados[0]?.trabajos[0]?.people_id;
+      MONDA.add(chachu);
 
       console.log("task_status", task_status);
       const currentDate = new Date();
