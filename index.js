@@ -22,7 +22,13 @@ async function sendEmail(from, to, subject, text, appName) {
       from: `"${appName}" <${from}>`,
       to: to,
       subject: subject,
-      text: text
+      text: text,
+      html: `
+      <div style="background-color: #f6f6f6; padding: 20px;">
+          <h1 style="color: #333;">${subject}</h1>
+          <p style="color: #555;">${text}</p>
+      </div>
+  `
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -35,8 +41,8 @@ async function sendEmail(from, to, subject, text, appName) {
 }
 
 async function sendSMS(body, from, to) {
-  const accountSid = "AC0908f3a9fda5f7537ab46c8e160f4f1d";
-  const authToken = "7e8366371b0cdd67928ec1e862b7dc16";
+  const accountSid = "AC49a03e1a24be56d1ae59a7de08be21e5";
+  const authToken = "e6fda8ac8f642120a1e90fd562449c36";
   const twilio = require("twilio")(accountSid, authToken);
 
   try {
@@ -60,7 +66,7 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
     for (const ejercicio of exercises) {
       const { deliveryDateFinal, Course, task_status, enviados } = ejercicio;
 
-      const MONDA = new Set(); 
+      const MONDA = new Set();
       const chachu = enviados[0]?.trabajos[0]?.people_id;
       MONDA.add(chachu);
 
@@ -78,7 +84,6 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
         const estudiantes = await People.find();
         const estudiantesFiltrados = [];
 
-
         // console.log("estudiantes", estudiantes);
 
         for (const estudiante of estudiantes) {
@@ -92,9 +97,10 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
         }
         console.log("estudiantesFiltrados", estudiantesFiltrados);
 
-        const estudiantesSeleccionados = estudiantesFiltrados.filter(estudiante => !MONDA.has(estudiante._id));
+        const estudiantesSeleccionados = estudiantesFiltrados.filter(
+          (estudiante) => !MONDA.has(estudiante._id)
+        );
         console.log("estudiantesSeleccionados", estudiantesSeleccionados);
-
 
         const paranotificar = estudiantesSeleccionados.map((estudiante) => ({
           nameAcudiente: estudiante.nameAcudiente,
@@ -112,10 +118,10 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
           const emailText =
             "Hola, esta es una notificación automática que le recuerda que el alumno del cual es acudiente tiene actividades pendientes.";
           const appName = "SmartLearn";
-          const accountSid = "AC0908f3a9fda5f7537ab46c8e160f4f1d";
-          const authToken = "7e8366371b0cdd67928ec1e862b7dc16";
+          const accountSid = "AC49a03e1a24be56d1ae59a7de08be21e5";
+          const authToken = "e6fda8ac8f642120a1e90fd562449c36";
           const twilio = require("twilio")(accountSid, authToken);
-          const fromSMS = "+19156007324";
+          const fromSMS = "+14153295473";
           const toSMS = notificacion.CelularAcudiente;
           const smsBody =
             "Hola, esta es una notificación automática que le recuerda que el alumno del cual es acudiente tiene actividades pendientes.";
@@ -155,7 +161,10 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
             console.error(
               `Error al enviar notificación a ${toSMS}. Detalles: ${error.toString()}`
             );
-
+            console.error(
+              `Error al enviar notificación a ${toSMS}. Detalles:`,
+              error
+            );
             const errorLog = new Log({
               receptor: toEmail,
               fecha: new Date(),
