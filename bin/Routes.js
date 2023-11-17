@@ -56,6 +56,11 @@ app.get("/logs", function (req, res) {
 
 // _______________________________  CREAR NOTICIAS _________________________________________
 
+app.get("/logs", function(req, res){
+  Controller.getLog(res)
+})
+
+
 // Recibir noticias
 app.post("/notice", function (req, res) {
   const notice = req.body;

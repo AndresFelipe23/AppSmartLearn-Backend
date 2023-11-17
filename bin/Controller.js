@@ -152,7 +152,7 @@ class Controller {
       res.send(logs);
     } catch (err) {
       console.error(err);
-      res.status(500).send("Error al obtener los logs");
+      res.status(500).send('Error al obtener los logs');
     }
   }
 
