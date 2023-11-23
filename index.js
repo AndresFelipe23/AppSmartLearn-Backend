@@ -71,7 +71,7 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
 
       if (
         deliveryDateFinal <= gaver &&
-        task_status == "653f0a51777e847360caeb57"
+        task_status == "653f0a51777e847360caeb57p"
       ) {
         console.log("Aqui deberia mandar");
 
