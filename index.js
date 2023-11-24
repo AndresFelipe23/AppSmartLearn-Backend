@@ -9,8 +9,8 @@ const People = require("./bin/models/People");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "notificacionessmarlearn@gmail.com",
-    pass: "wwcsywlqvbksltne"
+    user: "ggaleanoguerra@gmail.com",
+    pass: "bqvzvtjedqktnbvx"
   }
 });
 
@@ -71,7 +71,7 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
 
       if (
         deliveryDateFinal <= gaver &&
-        task_status == "653f0a51777e847360caeb57p"
+        task_status == "653f0a51777e847360caeb57b"
       ) {
         console.log("Aqui deberia mandar");
 
