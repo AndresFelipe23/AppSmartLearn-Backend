@@ -1224,7 +1224,7 @@ class Controller {
 
     for (let asignature of data.asignatures) {
       var art = [];
-
+      console.log("asignature", asignature)
       //  var procesar = asignature.Actividades.filter((ele)=> {return ele._id_state == 1})
       for (let acti of asignature.Actividades) {
         console.log(acti);

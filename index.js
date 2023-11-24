@@ -1,3 +1,4 @@
+// console.log('VAYA COMA MONDA')
 const { app } = require("./bin/Routes");
 const schedule = require("node-schedule");
 const express = require("express");
@@ -9,8 +10,8 @@ const People = require("./bin/models/People");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "ggaleanoguerra@gmail.com",
-    pass: "bqvzvtjedqktnbvx"
+    user: "notificacionessmarlearn@gmail.com",
+    pass: "cwrnlmzwhyfhhhio"
   }
 });
 
@@ -22,7 +23,13 @@ async function sendEmail(from, to, subject, text, appName) {
       from: `"${appName}" <${from}>`,
       to: to,
       subject: subject,
-      text: text
+      text: text,
+      html: `
+      <div style="background-color: #f6f6f6; padding: 20px;">
+          <h1 style="color: #333;">${subject}</h1>
+          <p style="color: #555;">${text}</p>
+      </div>
+  `
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -35,8 +42,8 @@ async function sendEmail(from, to, subject, text, appName) {
 }
 
 async function sendSMS(body, from, to) {
-  const accountSid = "AC0908f3a9fda5f7537ab46c8e160f4f1d";
-  const authToken = "7e8366371b0cdd67928ec1e862b7dc16";
+  const accountSid = "AC7a2190ed2ffbc60d61b9d0bd130c352c";
+  const authToken = "7551bfcbb82467aa5722cea320de1e64";
   const twilio = require("twilio")(accountSid, authToken);
 
   try {
@@ -60,24 +67,26 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
     for (const ejercicio of exercises) {
       const { deliveryDateFinal, Course, task_status, enviados } = ejercicio;
 
-      const MONDA = new Set(); 
-      const chachu = enviados[0]?.trabajos[0]?.people_id;
+      const MONDA = new Set();
+      const chachu = enviados[0]?.trabajos[0]?.people_id.toString();
+      console.log("chachu", chachu)
       MONDA.add(chachu);
+      console.log("MONDA", MONDA)
+
 
       console.log("task_status", task_status);
       const currentDate = new Date();
       const gaver = new Date();
-      gaver.setDate(currentDate.getDate() + 30);
+      gaver.setDate(currentDate.getDate() + 3);
 
       if (
         deliveryDateFinal <= gaver &&
-        task_status == "653f0a51777e847360caeb57b"
+        task_status == "653f0a6c777e847360caeb5"
       ) {
         console.log("Aqui deberia mandar");
 
         const estudiantes = await People.find();
         const estudiantesFiltrados = [];
-
 
         // console.log("estudiantes", estudiantes);
 
@@ -92,9 +101,10 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
         }
         console.log("estudiantesFiltrados", estudiantesFiltrados);
 
-        const estudiantesSeleccionados = estudiantesFiltrados.filter(estudiante => !MONDA.has(estudiante._id));
+        const estudiantesSeleccionados = estudiantesFiltrados.filter(
+          (estudiante) => !MONDA.has(estudiante._id.toString())
+        );
         console.log("estudiantesSeleccionados", estudiantesSeleccionados);
-
 
         const paranotificar = estudiantesSeleccionados.map((estudiante) => ({
           nameAcudiente: estudiante.nameAcudiente,
@@ -112,10 +122,10 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
           const emailText =
             "Hola, esta es una notificación automática que le recuerda que el alumno del cual es acudiente tiene actividades pendientes.";
           const appName = "SmartLearn";
-          const accountSid = "AC0908f3a9fda5f7537ab46c8e160f4f1d";
-          const authToken = "7e8366371b0cdd67928ec1e862b7dc16";
+          const accountSid = "AC7a2190ed2ffbc60d61b9d0bd130c352c";
+          const authToken = "7551bfcbb82467aa5722cea320de1e64";
           const twilio = require("twilio")(accountSid, authToken);
-          const fromSMS = "+19156007324";
+          const fromSMS = "+19784516036";
           const toSMS = notificacion.CelularAcudiente;
           const smsBody =
             "Hola, esta es una notificación automática que le recuerda que el alumno del cual es acudiente tiene actividades pendientes.";
@@ -155,7 +165,10 @@ const job = schedule.scheduleJob("*/1 * * * *", async () => {
             console.error(
               `Error al enviar notificación a ${toSMS}. Detalles: ${error.toString()}`
             );
-
+            console.error(
+              `Error al enviar notificación a ${toSMS}. Detalles:`,
+              error
+            );
             const errorLog = new Log({
               receptor: toEmail,
               fecha: new Date(),
